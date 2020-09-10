@@ -1,0 +1,2 @@
+# Ignore root certificates that are downloaded during runtime*
+/lcu_client/certificates/*
