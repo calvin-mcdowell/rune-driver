@@ -8,6 +8,7 @@ def test_always_pass():
     """
     assert True
 
+
 def test_download_root_certificate():
     """
     Validate that the root certificate downloads successfully from Riot Games
@@ -19,6 +20,13 @@ def test_download_root_certificate():
     client = LcuClient()
     client.download_root_certificate()
 
-    if os.path.exists('lcu_client/certificates/riotgames.pem'):
-        assert True
+    assert os.path.exists(client.root_certificate)
 
+
+def test_lcu_connectivity():
+    """
+    Validate successful connectivity to the local LCU server (League of Legends client)
+    """
+
+    client = LcuClient()
+    assert client.send_request_lcu(uri='/lol-perks/v1/pages').status_code == 200

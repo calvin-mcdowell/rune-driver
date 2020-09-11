@@ -11,10 +11,10 @@ class LcuClient:
     """
     """
 
-    # TODO: Add a function to find the lockfile in custom installation directories
-    lock_file = 'D:\Riot Games\League of Legends\lockfile'
-
     def __init__(self):
+        # TODO: Add a function to find the lockfile in custom installation directories
+        lock_file = 'D:\Riot Games\League of Legends\lockfile'
+
         # Retrieve the listening LCU port and generated password from the local lockfile
         try:
             with open(lock_file, 'r') as f:
@@ -25,6 +25,9 @@ class LcuClient:
             # TODO: Add logging
             # https://stackoverflow.com/questions/15727420/using-logging-in-multiple-modulesprint('tset')
             return None
+
+        # Download the Riot Games root SSL certificate
+        self.download_root_certificate()
 
     def send_request_lcu(self, uri, rtype='GET', data=None, json=None):
         """
@@ -40,21 +43,19 @@ class LcuClient:
 
         url = f'https://127.0.0.1:{self.port}{uri}'
 
-        self.download_root_certificate()
-
         try:
             # HTTP GET request handling
             if rtype == 'GET':
-                response = requests.get(url, verify='riotgames.pem', auth=('riot', self.password))
+                response = requests.get(url, verify=self.root_certificate, auth=('riot', self.password))
             # HTTP DELETE request handling
             elif rtype == 'DELETE':
-                response = requests.delete(url, verify='riotgames.pem', auth=('riot', self.password))
+                response = requests.delete(url, verify=self.root_certificate, auth=('riot', self.password))
             # HTTP POST request handling (General HTTP body data)
             elif rtype == 'POST' and data != None:
-                response = requests.post(url, verify='riotgames.pem', auth=('riot', self.password), data=data)
+                response = requests.post(url, verify=self.root_certificate, auth=('riot', self.password), data=data)
             # HTTP POST request handling (JSON data, typically rune pages in this case)
             elif rtype == 'POST' and json != None:
-                response = requests.post(url, verify='riotgames.pem', auth=('riot', self.password), json=json)
+                response = requests.post(url, verify=self.root_certificate, auth=('riot', self.password), json=json)
             # TODO: Add implementation of the PUT method
             #       EX: http://lcu.vivide.re/#operation--lol-perks-v1-pages--id--put
 
@@ -93,6 +94,8 @@ class LcuClient:
 
             with open(f'lcu_client/certificates/riotgames.pem', 'wb') as cert_file:
                 cert_file.write(response.content)
+
+            self.root_certificate = 'lcu_client/certificates/riotgames.pem'
             return True
         except Exception as err:
             # TODO: Add logging
