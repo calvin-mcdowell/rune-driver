@@ -102,9 +102,10 @@ class LcuClient:
             # TODO: Add pythonic exception handling
             return False
 
-    def get_rune_pages(self):
+    def get_rune_pages(self, name=None):
         """
-        Retrieves all current rune pages from the LCU server and returns editable rune pages
+        Retrieves all current rune pages from the LCU server and returns editable rune pages. If name arg is defined,
+            returns only that specific rune page. If the rune page does not exists, returns None
 
         KEYS available per rune page.json()
 	        autoModifiedSelections
@@ -123,10 +124,15 @@ class LcuClient:
 
         :return:
         """
-        r = self.send_request_lcu('/lol-perks/v1/pages').json()
         # TODO: Handle responses that return no content
+        r = self.send_request_lcu('/lol-perks/v1/pages').json()
 
-        runes = [ page for page in r if page['isDeletable'] == True ]
-        return runes
+        runes = [page for page in r if page['isDeletable'] is True]
 
-
+        if name is not None:
+            for rune in runes:
+                if rune['name'] == name:
+                    return rune
+            return None
+        else:
+            return runes

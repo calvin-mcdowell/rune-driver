@@ -8,10 +8,9 @@ def main():
     rune_driver.main() is just being used for class method verification until a main program loop is established
     """
     client = LcuClient()
-    runes = client.get_rune_pages()
+    rune = client.get_rune_pages(name='Akali')
 
-    for rune in runes:
-        print(f'{rune}\n')
+    print(f"\n\nReturned: {rune}")
 
 if __name__ == '__main__':
     main()
