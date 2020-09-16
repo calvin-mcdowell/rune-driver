@@ -8,7 +8,6 @@ def test_always_pass():
     """
     assert True
 
-
 def test_download_root_certificate():
     """
     Validate that the root certificate downloads successfully from Riot Games
@@ -21,7 +20,6 @@ def test_download_root_certificate():
     client.download_root_certificate()
 
     assert os.path.exists(client.root_certificate)
-
 
 def test_lcu_connectivity():
     """
