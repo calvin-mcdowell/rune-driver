@@ -122,10 +122,11 @@ class LcuClient:
 	        selectedPerkIds
 	        subStyleId
 
-        :return:
+        :param name: optional argument specifying a specific rune page by its name value
+        :return: JSON object representing one or more rune pages / None
         """
         # TODO: Handle responses that return no content
-        r = self.send_request_lcu('/lol-perks/v1/pages').json()
+        r = self.send_request_lcu(uri='/lol-perks/v1/pages').json()
 
         runes = [page for page in r if page['isDeletable'] is True]
 
@@ -136,3 +137,29 @@ class LcuClient:
             return None
         else:
             return runes
+
+    def delete_rune_page(self, id):
+        """
+        Attempts to send a DELETE request to the local LCU server to remove a specific rune page
+
+        :param id: string value representing the ID of the rune page to be deleted
+        :return: None object in the event that page deletion fails
+        """
+        r = self.send_request_lcu(uri=f'/lol-perks/v1/pages/{id}', rtype='DELETE')
+
+        if r.status_code != '204':
+            # TODO: Add logging functionality / Pipe out some notice that the delete failed
+            return None
+
+    def post_rune_page(self, page):
+        """
+        Attempts to send a POST request to the local LCU server to add a new rune page
+
+        :param page: JSON object of the rune page to be added
+        :return: None object in the event that page addition fails
+        """
+        r = self.send_request_lcu('/lol-perks/v1/pages', 'POST', json=page)
+
+        if r.status_code != '200':
+            # TODO: Add logging functionality / Pipe out some notice that the delete failed
+            return None
