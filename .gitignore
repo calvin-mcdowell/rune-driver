@@ -1,2 +1,5 @@
-# Ignore root certificates that are downloaded during runtime*
+# Ignore root certificates that are downloaded during runtime
 /lcu_client/certificates/*
+
+# Ignore rune page storage directory that is created during runtime
+/rune_storage/runes/
