@@ -1,7 +1,7 @@
 """
 https://github.com/calvin-mcdowell/rune-driver
 
-Class to provide helper functions while interacting with the local LCU (League Client Update) server.
+Class to provide methods while interacting with the local LCU (League Client Update) server.
 """
 import os
 import requests
